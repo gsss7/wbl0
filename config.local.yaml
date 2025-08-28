@@ -1,0 +1,26 @@
+app:
+  name: demo-orders
+  env: dev
+
+http:
+  addr: ":8081"
+
+postgres:
+  host: localhost
+  port: 5432
+  db: demo
+  user: demo
+  password: demopass
+  max_conns: 10
+
+kafka:
+  brokers:
+    - localhost:9094
+  topic: orders
+  group_id: orders-consumer
+  commit_interval_ms: 1000
+
+cache:
+  ttl: "10m"
+  max_items: 10000
+  preload_last_n: 1000

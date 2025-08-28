@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Демо: Заказы</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; }
+        input { padding: 8px; width: 320px; }
+        button { padding: 8px 12px; }
+        pre { background: #f6f8fa; padding: 16px; border-radius: 8px; }
+        .row { display: flex; gap: 8px; align-items: center; }
+    </style>
+</head>
+<body>
+<h1>Информация о заказе</h1>
+<div class="row">
+    <input id="orderId" placeholder="Введите order_uid" />
+    <button onclick="fetchOrder()">Найти</button>
+</div>
+<p id="status"></p>
+<pre id="out"></pre>
+
+<script>
+    async function fetchOrder(){
+        const id = document.getElementById('orderId').value.trim();
+        const out = document.getElementById('out');
+        const status = document.getElementById('status');
+        out.textContent = '';
+        status.textContent = 'Загрузка...';
+        try {
+            const res = await fetch(`/api/order/${encodeURIComponent(id)}`);
+            const data = await res.json();
+            if(!res.ok){ status.textContent = data.error || 'Ошибка'; return; }
+            status.textContent = 'OK';
+            out.textContent = JSON.stringify(data, null, 2);
+        } catch(e){ status.textContent = 'Ошибка сети'; }
+    }
+</script>
+</body>
+</html>
