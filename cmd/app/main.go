@@ -56,13 +56,15 @@ func main() {
 	defer c.Stop()
 
 	if cfg.Cache.PreloadLastN > 0 {
-		if orders, err := repository.LoadRecentOrders(ctx, cfg.Cache.PreloadLastN); err != nil {
+		orders, err := repository.LoadRecentOrders(ctx, cfg.Cache.PreloadLastN)
+
+		if err != nil {
+			log.Printf("cache preload failed: %v", err)
+		} else {
 			for _, o := range orders {
 				c.Set(o.OrderUID, *o)
 			}
 			log.Printf("cache preloaded: %d entries", len(orders))
-		} else {
-			log.Printf("cache preload failed: %v", err)
 		}
 	}
 
